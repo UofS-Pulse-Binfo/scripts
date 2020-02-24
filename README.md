@@ -4,7 +4,7 @@ Scripts and one-liners used by our group. Saved here so they sre not forgotten..
 ## Table of Contents
 
 ### Scripts
-Every time you add a script to this repository please add it's name and a short description here.
+Every time you add a script to this repository please add it's name and a short description here. Each script should be in it's own directory with the following naming format `[Author initials]-[descriptive name]` and a `README.md` must be included in that directory. The `link to script below` should link to the `README.md`.
 
 **Template:**
 ```
