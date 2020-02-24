@@ -24,6 +24,13 @@ command -opt file.boo
 ```
 Longer description of what the one-liner does.
 
+#### Use Vim to convert file format
+```
+:set fileformat=unix/dos/mac then :w
+```
+An easy way to convert file formats by Vim. Make sure write permission is obtained before open a file with Vim.
+
+
 ### SQL
 Use the same format as one-liners.
 
