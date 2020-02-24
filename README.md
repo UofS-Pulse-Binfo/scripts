@@ -27,3 +27,13 @@ Longer description of what the one-liner does.
 ### SQL
 Use the same format as one-liners.
 
+#### Breakdown of features per type.
+```sql
+SELECT cvt.name as type, count(*) as number 
+FROM chado.feature base 
+LEFT JOIN chado.cvterm cvt ON cvt.cvterm_id=base.type_id 
+GROUP BY cvt.name;
+```
+This query returns a list of all types of features, as well as the number of records for each.
+
+**This query can be altered to work on any chado table with a type_id by simply changing `feature` to the same of the table.**
