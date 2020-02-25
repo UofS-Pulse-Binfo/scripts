@@ -34,6 +34,16 @@ An easy way to convert file formats by Vim. Make sure writing permission is obta
 ### SQL
 Use the same format as one-liners.
 
+#### Search for Germplasm by name.
+```sql
+SELECT cvt.name as type, o.genus||' '||o.species as species, s.uniquename, s.name 
+FROM chado.stock s 
+LEFT JOIN chado.organism o ON o.organism_id=s.organism_id 
+LEFT JOIN chado.cvterm cvt ON cvt.cvterm_id=s.type_id 
+WHERE s.name~'Robin';
+```
+Lists all germplasm with the letters `Robin` included in the `stock.name` column. Additionally, this resolves the type and orgaqnism for easy reading.
+
 #### Breakdown of features per type.
 ```sql
 SELECT cvt.name as type, count(*) as number 
