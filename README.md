@@ -54,3 +54,17 @@ GROUP BY cvt.name;
 This query returns a list of all types of features, as well as the number of records for each.
 
 **This query can be altered to work on any chado table with a type_id by simply changing `feature` to the same of the table.**
+
+#### Lookup Terms
+```sql
+SELECT cv.cv_id, cv.name as cv_name,
+  cvterm.cvterm_id, cvterm.name as cvterm_name,
+  db.db_id, db.name as db_name,
+  dbxref.dbxref_id, dbxref.accession,
+  db.name||':'||dbxref.accession as term
+FROM chado.cvterm
+JOIN chado.cv ON cv.cv_id=cvterm.cv_id
+JOIN chado.dbxref ON cvterm.dbxref_id=dbxref.dbxref_id
+JOIN chado.db ON db.db_id=dbxref.db_id
+WHERE cvterm.name = 'F1';
+```
