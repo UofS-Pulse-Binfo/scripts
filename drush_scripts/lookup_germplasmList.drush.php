@@ -57,6 +57,7 @@ $IN = fopen($input_file, "r");
 $OUT = fopen($output_file, "w");
 if ($IN AND $OUT) {
 	while (($line = fgetcsv($IN, 0, "\t")) !== false) {
+		$extra = [];
 		$germ_name = trim($line[$germ_name_col_no]);
 		$germ_found = chado_query('SELECT uniquename FROM {stock} WHERE name=:name and organism_id IN (:org)',
 	 		[':name' => $germ_name, ':org' => $organism_ids])->fetchCol();
@@ -71,14 +72,19 @@ if ($IN AND $OUT) {
 		// If not found then try harder?
 		else {
 			$germ_found = chado_query('SELECT uniquename, name FROM {stock} WHERE name ~ :name and organism_id IN (:org)',
-	 		  [':name' => '^' . $germ_name . '.{0,2}', ':org' => $organism_ids])->fetchCol();
+	 		  [':name' => '^' . $germ_name . '.{0,2}', ':org' => $organism_ids])->fetchAll();
 			if (!empty($germ_found)) {
-				$code = 'NOT FOUND BUT MIGHT BE: ' . print_r($germ_found, TRUE);
+				$code = 'NOT FOUND BUT MIGHT BE';
+	      foreach ($germ_found as $g) {
+					$extra[] = $g->name;
+				}
+				$germ_found = '';
 			}
 		}
 
 		// Compile Results.
-		$result = $germ_found;
+		$result = $extra;
+		array_unshift($result, $germ_found);
 		array_unshift($result, $code);
 		array_unshift($result, $germ_name);
 		fputcsv($OUT, $result, "\t");
