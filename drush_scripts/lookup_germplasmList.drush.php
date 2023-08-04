@@ -68,8 +68,14 @@ if ($IN AND $OUT) {
 		elseif (!empty($germ_found)) {
 			$code = "DUPLICATED";
 		}
-
 		// If not found then try harder?
+		else {
+			$germ_found = chado_query('SELECT uniquename, name FROM {stock} WHERE name ~ :name and organism_id IN (:org)',
+	 		  [':name' => '^' . $germ_name . '.{0,2}', ':org' => $organism_ids])->fetchCol();
+			if (!empty($germ_found)) {
+				$code = 'NOT FOUND BUT MIGHT BE: ' . print_r($germ_found, TRUE);
+			}
+		}
 
 		// Compile Results.
 		$result = $germ_found;
