@@ -61,13 +61,16 @@ if ($IN AND $OUT) {
 		$germ_name = trim($line[$germ_name_col_no]);
 		$germ_found = chado_query('SELECT uniquename FROM {stock} WHERE name=:name and organism_id IN (:org)',
 	 		[':name' => $germ_name, ':org' => $organism_ids])->fetchCol();
+		$germ_uniquename = '';
 
 		$code = 'NOT-FOUND';
 		if (sizeof($germ_found) == 1) {
 			$code = 'UNIQUE';
+			$germ_uniquename = current($germ_found);
 		}
 		elseif (!empty($germ_found)) {
 			$code = "DUPLICATED";
+			$germ_uniquename = implode(' + ', $germ_found);
 		}
 		// If not found then try harder?
 		else {
@@ -78,13 +81,13 @@ if ($IN AND $OUT) {
 	      foreach ($germ_found as $g) {
 					$extra[] = $g->name;
 				}
-				$germ_found = '';
+				$germ_uniquename = '';
 			}
 		}
 
 		// Compile Results.
 		$result = $extra;
-		array_unshift($result, $germ_found);
+		array_unshift($result, $germ_uniquename);
 		array_unshift($result, $code);
 		array_unshift($result, $germ_name);
 		fputcsv($OUT, $result, "\t");
